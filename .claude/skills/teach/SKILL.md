@@ -13,7 +13,7 @@ The goal is never "he can recite the fact." The goal is **understanding**: the f
 
 Claude Code has a single interactive-question tool, `AskUserQuestion`. This skill uses it in two modes, referred to below by name — both are the same tool call, the mode is a matter of what you ask and how you follow up, not a different tool:
 
-- **`quiz`** — graded. You already know the correct answer before you ask it. Shuffle the options yourself (don't always put the correct one in the same slot), and always add "I don't know" as an explicit extra option in last position. The instant the answer comes back, your very next message grades it: ✓ **Correct** or ✗ **Incorrect** (or a plain, non-judgmental acknowledgment for "I don't know" — that's a real gap, not a wrong guess), then the correct answer, then why. Never let any of that grading leak into the options themselves before he answers.
+- **`quiz`** — graded. You already know the correct answer before you ask it. Shuffle the options yourself (don't always put the correct one in the same slot), and always add "I don't know" as an explicit extra option in last position. The instant the answer comes back, your very next message grades it: ✅ **Correct** or ❌ **Incorrect** (or a plain, non-judgmental acknowledgment for "I don't know" — that's a real gap, not a wrong guess), then the correct answer, then why. Never let any of that grading leak into the options themselves before he answers.
 - **`ask_user_question`** — ungraded. A genuine no-right-answer fork: preference, direction, what he wants next. No "I don't know" option needed, and free text is fine.
 
 Subagents (`researcher`, `mermaid-maker`, `svg-maker`) are dispatched with the `Agent` tool, e.g. `Agent(subagent_type="researcher", prompt="...")`.
@@ -27,7 +27,7 @@ Every topic gets a standing file: `learning/<kebab-case-topic>/finding.md`, rela
 - **Structure of each session block:**
   - **Where we started** — the Phase 1a floor/ceiling and the Phase 1b goal, in a couple of sentences.
   - **What we covered** — the dependency map from Phase 2 (the same mermaid graph is fine).
-  - **Q&A record** — every `quiz` from this session, verbatim: the question, the options, what he answered, ✓/✗ (or "I don't know"), the correct answer, and the explanation. This is evidence, not paraphrase.
+  - **Q&A record** — every `quiz` from this session, verbatim: the question, the options, what he answered, ✅/❌ (or "I don't know"), the correct answer, and the explanation. This is evidence, not paraphrase.
   - **Conclusion** — your honest verdict per node (solid / shaky / not yet — and if shaky, *why*: a slip, a narrow gap, or a real misconception), plus an overall assessment and what's worth reviewing later. This is a judgment call made in good faith — don't round a shaky node up to "solid" just to close the session on a high note.
 - **When to write:** open the file once the Phase 2 plan is agreed (write "where we started" + "what we covered" right away, before Phase 3 starts); append each node's Q&A the moment its quiz-check resolves, not reconstructed from memory at the end; append the conclusion once Phase 3 wraps up. Read-then-Write the whole file back for each append — simpler than an exact-match edit when all you're doing is adding a section at the end.
 
@@ -146,6 +146,8 @@ A good plan is what makes the teaching feel inevitable instead of arbitrary.
 ### Phase 3 — Teach (the loop)
 
 Build his dependency graph one **node** at a time — and every node gets the same treatment, whether it's a foundational unconditional truth or a derived step. There is almost never just one; most topics need several, and each new one goes through the loop exactly like any other node:
+
+**Open every node with a heading that flags its type — the color is the signal, not decoration.** Use `## 🟩 Foundational Truth — <name>` for a root unconditional truth, or `## 🟦 Derived Step — <name>` for anything built on top of one. Scanning back through a session should show at a glance which nodes were bedrock and which were constructed.
 
 For **every node** (each unconditional truth *and* each non-trivial reasoning step toward the goal), run:
 
